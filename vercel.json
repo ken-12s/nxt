@@ -1,7 +1,0 @@
-{
-  "routes": [
-    { "src": "/api/(.*)", "dest": "/api/$1" },
-    { "src": "/viewer", "dest": "/public/viewer.html" },
-    { "src": "/(.*)", "dest": "/public/editor.html" }
-  ]
-}
