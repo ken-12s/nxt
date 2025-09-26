@@ -1,50 +1,33 @@
 import './globals.css'
-import Link from 'next/link'
-import { headers } from 'next/headers'
+import Sidebar from './components/Sidebar'
+import MobileSidebar from './components/MobileSidebar'
 
 export const metadata = {
   title: 'NXT 이벤트 가이드',
-  description: '이벤트 공지/가이드/룰을 담은 문서 사이트',
+  description: 'Markdown 기반 문서 사이트',
 }
 
-const links = [
-  { href: '/', label: '홈' },
-  { href: '/guides', label: '가이드 개요' },
-  { href: '/guides/event-basics', label: '이벤트 기본' },
-  { href: '/guides/rules', label: '규칙 정리' },
-  { href: '/guides/faq', label: 'FAQ' },
-]
-
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const h = await headers()
-  const currentPath = h.get('x-invoke-path') ?? ''
-
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko">
-      <body>
-        <div className="layout">
-          <aside className="sidebar">
-            <h2>문서</h2>
-            <nav>
-              {links.map(l => {
-                const active = currentPath === l.href
-                return (
-                  <Link key={l.href} href={l.href} className={active ? 'active' : ''}>
-                    {l.label}
-                  </Link>
-                )
-              })}
-            </nav>
-          </aside>
-          <div>
-            <header className="header">
-              <strong>NXT 이벤트 가이드</strong>
-              <span style={{ color: '#9ca3af' }}>Markdown 기반 · Next.js + MDX</span>
-            </header>
-            <main className="main">
-              <div className="mdx">{children}</div>
-            </main>
+      <body className="min-h-screen bg-bg text-text">
+        {/* 상단 헤더: 모바일에서 메뉴 버튼 노출 */}
+        <header className="sticky top-0 z-20 border-b border-border bg-panel/70 backdrop-blur">
+          <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+            <div className="flex items-center gap-3">
+              <MobileSidebar />
+              <strong className="text-base lg:text-lg">NXT 이벤트 가이드</strong>
+            </div>
+            <span className="hidden text-sm text-muted sm:block">Next.js · MDX · Tailwind</span>
           </div>
+        </header>
+
+        {/* 본문 레이아웃: 모바일 단일열, 데스크톱 2열 */}
+        <div className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-0 px-4 lg:grid-cols-[16rem_1fr]">
+          <Sidebar />
+          <main className="py-6">
+            <article className="prose max-w-none">{children}</article>
+          </main>
         </div>
       </body>
     </html>
